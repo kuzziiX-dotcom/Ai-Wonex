@@ -24,57 +24,46 @@
         .hidden { display: none !important; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Chat Bubbles */
         .msg-ai { background: rgba(255, 255, 255, 0.03); align-self: flex-start; border-radius: 0 24px 24px 24px; border: 1px solid rgba(0, 242, 255, 0.1); width: 100%; max-width: 95%; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .msg-user { background: var(--blue); align-self: flex-end; border-radius: 24px 24px 0 24px; width: fit-content; max-width: 85%; margin-bottom: 20px; color: white; padding: 15px 20px; box-shadow: 0 5px 15px rgba(0, 98, 255, 0.3); }
-        
-        .typing-dot { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        .msg-user { background: var(--blue); align-self: flex-end; border-radius: 24px 24px 0 24px; width: fit-content; max-width: 85%; margin-bottom: 20px; color: white; padding: 15px 20px; }
         
         pre { background: #080a0f !important; padding: 20px; border-radius: 15px; overflow-x: auto; margin: 15px 0; border: 1px solid #1a1e26; font-family: monospace; color: #00f2ff; }
-        code { font-family: monospace; color: #00f2ff; }
-        .logo-glow { filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.5)); }
+        .logo-glow { filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.4)); }
     </style>
 </head>
 <body onload="initApp()">
 
-    <!-- AUTH SECTION -->
+    <!-- AUTH SECTION (මුලින්ම පෙන්වන කොටස) -->
     <section id="page-auth" class="min-h-screen flex items-center justify-center p-6 bg-[radial-gradient(circle_at_top_right,_#112244_0%,_transparent_50%)]">
         <div class="glass w-full max-w-sm p-12 rounded-[3.5rem] text-center border-cyan-500/20 shadow-2xl">
-            <div class="relative inline-block mb-10">
-                <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" 
-                     class="w-32 h-32 rounded-2xl logo-glow rotate-3 hover:rotate-0 transition duration-500">
-                <div class="absolute inset-0 bg-cyan-500/20 blur-3xl rounded-full"></div>
-            </div>
+            <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" 
+                 class="w-32 h-32 rounded-2xl logo-glow mx-auto mb-10">
             <h1 class="font-tech text-4xl font-black mb-2 uppercase italic tracking-tighter">WONEX <span class="text-neon">DIGITAL</span></h1>
             <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.4em] mb-12">The AI Code Architect</p>
             
-            <button id="googleLoginBtn" class="w-full flex items-center justify-center gap-4 bg-white text-black py-5 rounded-2xl font-black hover:bg-gray-100 transition shadow-xl active:scale-95 mb-4">
+            <button id="googleLoginBtn" class="w-full flex items-center justify-center gap-4 bg-white text-black py-5 rounded-2xl font-black hover:bg-gray-100 transition shadow-xl active:scale-95">
                 <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" class="w-6 h-6"> 
                 <span class="tracking-tight uppercase">Login with Google</span>
             </button>
-            <p id="authError" class="text-red-500 text-[10px] font-bold mt-4 hidden"></p>
+            
+            <div id="loader" class="hidden mt-6 text-cyan-400 font-bold uppercase text-xs animate-pulse">Authenticating...</div>
         </div>
     </section>
 
-    <!-- MAIN APP STRUCTURE -->
+    <!-- MAIN APP STRUCTURE (Login වූ පසු පෙන්වන කොටස) -->
     <div id="main-app" class="hidden min-h-screen flex flex-col">
         <!-- Navigation -->
         <nav class="p-4 glass sticky top-0 z-50 flex justify-between items-center px-6 md:px-12 border-b border-white/5">
             <div class="flex items-center gap-4 cursor-pointer" onclick="navigateTo('chat')">
-                <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" 
-                     class="w-12 h-12 rounded-lg logo-glow">
-                <h1 class="font-tech text-xl font-bold tracking-tighter hidden sm:block uppercase italic">WONEX <span class="text-neon">DIGITAL</span></h1>
+                <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" class="w-12 h-12 rounded-lg">
+                <h1 class="font-tech text-xl font-bold tracking-tighter hidden sm:block uppercase">WONEX <span class="text-neon">DIGITAL</span></h1>
             </div>
             
-            <div class="flex items-center gap-4 md:gap-8">
-                <a href="https://youtube.com/@wonexlk?si=kS-M5h91NZjayu1F" target="_blank" class="text-red-500 text-2xl hover:scale-110 transition">
-                    <i class="fab fa-youtube"></i>
-                </a>
-                <div class="bg-cyan-500/10 text-cyan-400 px-4 py-1.5 rounded-full text-[10px] font-black border border-cyan-500/20 hidden md:block">
-                    LIVE USERS: <span id="liveCounter">1</span>
+            <div class="flex items-center gap-4">
+                <div class="bg-cyan-500/10 text-cyan-400 px-4 py-1.5 rounded-full text-[10px] font-black border border-cyan-500/20">
+                    LIVE: <span id="liveCounter">1</span>
                 </div>
-                <div onclick="navigateTo('profile')" class="w-10 h-10 rounded-full border-2 border-cyan-500 overflow-hidden cursor-pointer shadow-lg">
+                <div onclick="navigateTo('profile')" class="w-10 h-10 rounded-full border-2 border-cyan-500 overflow-hidden cursor-pointer">
                     <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-full h-full object-cover">
                 </div>
             </div>
@@ -82,20 +71,14 @@
 
         <!-- CHAT INTERFACE -->
         <main id="view-chat" class="flex-grow flex flex-col p-4 md:p-8 max-w-5xl mx-auto w-full">
-            <div id="chatHistory" class="flex-grow overflow-y-auto space-y-2 pr-2 no-scrollbar mb-6 flex flex-col pt-4">
-                <!-- AI Welcome Message -->
-                <div class="msg-ai p-8 animate-fade-in shadow-xl">
-                    <div class="flex items-center gap-3 mb-4">
-                        <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" class="w-8 h-8 rounded border border-white/10">
-                        <h3 class="font-tech font-bold text-cyan-400 uppercase tracking-widest">Wonex AI</h3>
-                    </div>
-                    <p class="text-sm leading-relaxed text-gray-300">සාදරයෙන් පිළිගන්නවා! අලුත් Database එක දැන් සම්බන්ධයි. ඔබට අවශ්‍ය ඕනෑම Coding උදව්වක් මගෙන් ලබාගන්න.</p>
+            <div id="chatHistory" class="flex-grow overflow-y-auto space-y-4 pr-2 no-scrollbar mb-6 flex flex-col pt-4">
+                <div class="msg-ai p-8 shadow-xl">
+                    <p class="text-sm leading-relaxed text-gray-300">සාදරයෙන් පිළිගන්නවා! මම Wonex AI. ඔබට අවශ්‍ය ඕනෑම වෙබ් අඩවියක Code එක ලබාදෙන්න මම සූදානම්.</p>
                 </div>
             </div>
 
-            <!-- Input Area -->
             <div class="glass p-3 rounded-[2rem] flex items-center gap-3 border-white/10 shadow-2xl sticky bottom-4">
-                <input type="text" id="aiInput" placeholder="Describe what you want to build..." class="flex-grow bg-transparent p-4 outline-none text-sm font-medium" onkeypress="if(event.key === 'Enter') sendMessage()">
+                <input type="text" id="aiInput" placeholder="Describe your web idea..." class="flex-grow bg-transparent p-4 outline-none text-sm font-medium">
                 <button onclick="sendMessage()" class="w-14 h-14 btn-neon rounded-[1.2rem] flex items-center justify-center text-xl active:scale-90 transition">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -104,29 +87,25 @@
 
         <!-- PROFILE VIEW -->
         <main id="view-profile" class="hidden flex-grow p-8 flex items-center justify-center">
-            <div class="glass w-full max-w-md p-12 rounded-[3rem] text-center border-white/10 shadow-2xl relative overflow-hidden">
-                <div class="absolute -top-20 -right-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px]"></div>
-                <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" class="w-20 h-20 mx-auto mb-6 rounded-xl border border-white/10 logo-glow">
-                <h2 class="font-tech text-2xl font-bold mb-10 text-neon uppercase tracking-widest italic">Developer Profile</h2>
-                <div id="profDetails" class="space-y-4 text-left mb-10 relative z-10">
-                    <div class="bg-white/5 p-5 rounded-2xl border border-white/5">
-                        <p class="text-[10px] text-cyan-500 uppercase font-black tracking-widest mb-1">Full Name</p>
-                        <p id="profName" class="font-bold text-lg text-white">Gamer User</p>
+            <div class="glass w-full max-w-md p-12 rounded-[3rem] text-center border-white/10 shadow-2xl relative">
+                <img id="profImg" src="" class="w-24 h-24 mx-auto mb-6 rounded-full border-2 border-cyan-500">
+                <h2 class="font-tech text-2xl font-bold mb-10 text-neon uppercase">Developer Profile</h2>
+                <div class="space-y-4 text-left mb-10">
+                    <div class="bg-white/5 p-5 rounded-2xl">
+                        <p class="text-[10px] text-cyan-500 uppercase font-black mb-1">Name</p>
+                        <p id="profName" class="font-bold text-lg">---</p>
                     </div>
                 </div>
-                <button onclick="signOut()" class="w-full py-4 border border-red-500/30 text-red-500 font-bold rounded-2xl hover:bg-red-500/10 transition uppercase text-xs">Terminate Session</button>
+                <button onclick="signOut()" class="w-full py-4 bg-red-600/10 text-red-500 font-bold rounded-2xl border border-red-500/20">Log Out</button>
             </div>
         </main>
     </div>
 
-    <!-- Markdown & Marked Libraries -->
+    <!-- Scripting -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <script>
-        // --- CONFIG ---
-        const GEMINI_API_KEY = "AIzaSyCuKt-1ptyt8x2keYS7Q8VSivipToSLaEI"; 
-        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyAHP6jCiOZ3yBTMogJ-8lGWb26U_SfeXts",
             authDomain: "lochi-creation-bc929.firebaseapp.com",
@@ -140,98 +119,106 @@
         const auth = firebase.auth();
         const database = firebase.database();
 
-        // --- AUTH LOGIC (GOOGLE LOGIN FIXED) ---
+        // --- GEMINI CONFIG ---
+        const GEMINI_API_KEY = "AIzaSyCuKt-1ptyt8x2keYS7Q8VSivipToSLaEI"; 
+        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+        // --- AUTH LOGIC (FIXED FOR MOBILE) ---
         function initApp() {
+            // 1. Redirect Login එකක ප්‍රතිඵලය පරීක්ෂා කිරීම (Mobile සඳහා මෙය අත්‍යවශ්‍යයි)
+            auth.getRedirectResult().then(result => {
+                if (result.user) {
+                    toggleUI(true);
+                }
+            }).catch(error => {
+                console.error("Login Error: ", error.message);
+                document.getElementById('authError').innerText = error.message;
+                document.getElementById('authError').classList.remove('hidden');
+            });
+
+            // 2. Auth State වෙනස් වන විට (Login/Logout)
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    document.getElementById('page-auth').classList.add('hidden');
-                    document.getElementById('main-app').classList.remove('hidden');
-                    document.getElementById('profName').innerText = user.displayName;
-                    if(user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
+                    toggleUI(true);
+                    updateProfile(user);
                     trackPresence();
                 } else {
-                    document.getElementById('page-auth').classList.remove('hidden');
-                    document.getElementById('main-app').classList.add('hidden');
+                    toggleUI(false);
                 }
             });
 
-            // Google Sign-In Event
+            // 3. Login Button Click
             document.getElementById('googleLoginBtn').addEventListener('click', () => {
+                document.getElementById('loader').classList.remove('hidden');
                 const provider = new firebase.auth.GoogleAuthProvider();
-                auth.signInWithPopup(provider).catch(e => {
-                    const errEl = document.getElementById('authError');
-                    errEl.innerText = "Error: " + e.message;
-                    errEl.classList.remove('hidden');
-                });
+                // Mobile වලදීsignInWithRedirect ඉතා හොඳින් ක්‍රියා කරයි
+                auth.signInWithRedirect(provider);
             });
         }
 
-        function signOut() { auth.signOut().then(() => location.reload()); }
+        function toggleUI(isLoggedIn) {
+            if (isLoggedIn) {
+                document.getElementById('page-auth').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+            } else {
+                document.getElementById('page-auth').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('hidden');
+            }
+        }
+
+        function updateProfile(user) {
+            document.getElementById('profName').innerText = user.displayName;
+            if(user.photoURL) {
+                document.getElementById('userAvatar').src = user.photoURL;
+                document.getElementById('profImg').src = user.photoURL;
+            }
+        }
+
+        function signOut() {
+            auth.signOut().then(() => location.reload());
+        }
 
         function navigateTo(v) {
             ['chat', 'profile'].forEach(id => document.getElementById('view-'+id).classList.add('hidden'));
             document.getElementById('view-'+v).classList.remove('hidden');
         }
 
-        // --- LIVE USER COUNTER ---
+        // --- LIVE COUNTER ---
         function trackPresence() {
-            const onlineRef = database.ref('presence').push(true);
-            onlineRef.onDisconnect().remove();
-            database.ref('presence').on('value', s => {
-                document.getElementById('liveCounter').innerText = s.numChildren();
-            });
+            const userRef = database.ref('presence').push(true);
+            userRef.onDisconnect().remove();
+            database.ref('presence').on('value', s => document.getElementById('liveCounter').innerText = s.numChildren());
         }
 
-        // --- GEMINI AI CHAT LOGIC ---
+        // --- AI CHAT LOGIC ---
         async function sendMessage() {
             const input = document.getElementById('aiInput');
             const text = input.value.trim();
             if(!text) return;
 
-            const chatHistory = document.getElementById('chatHistory');
-            chatHistory.innerHTML += `<div class="msg-user shadow-2xl text-sm leading-relaxed animate-fade-in">${text}</div>`;
+            const history = document.getElementById('chatHistory');
+            history.innerHTML += `<div class="msg-user shadow-xl animate-fade-in">${text}</div>`;
             input.value = "";
-            
-            const loadingId = "load-" + Date.now();
-            chatHistory.innerHTML += `
-                <div id="${loadingId}" class="msg-ai p-8 flex gap-1 shadow-lg">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot" style="animation-delay: 0.2s"></div>
-                    <div class="typing-dot" style="animation-delay: 0.4s"></div>
-                </div>`;
-            chatHistory.scrollTop = chatHistory.scrollHeight;
+            history.scrollTop = history.scrollHeight;
 
             try {
                 const response = await fetch(GEMINI_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{ parts: [{ text: "You are Wonex Digital AI. Elite web developer. Answer in Sinhala if the user asks in Sinhala. Prompt: " + text }] }]
+                        contents: [{ parts: [{ text: "Wonex AI elite developer. tutorials @wonexlk. Prompt: " + text }] }]
                     })
                 });
                 const data = await response.json();
                 const aiText = data.candidates[0].content.parts[0].text;
-                
-                document.getElementById(loadingId).remove();
-                
-                chatHistory.innerHTML += `
-                    <div class="msg-ai p-8 animate-fade-in shadow-2xl">
-                        <div class="flex items-center gap-3 mb-4">
-                            <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" class="w-8 h-8 rounded shadow">
-                            <span class="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Wonex AI</span>
-                        </div>
-                        <div class="text-sm leading-relaxed text-gray-200">
-                            ${marked.parse(aiText)}
-                        </div>
-                    </div>`;
+                history.innerHTML += `<div class="msg-ai p-8 shadow-2xl animate-fade-in"><div class="text-sm leading-relaxed text-gray-200">${marked.parse(aiText)}</div></div>`;
             } catch (err) {
-                document.getElementById(loadingId).innerHTML = "<p class='text-red-400 text-xs uppercase font-bold p-6'>API Cluster connection failed.</p>";
+                history.innerHTML += `<p class="text-red-500 text-xs uppercase font-bold">API Error</p>`;
             }
-            chatHistory.scrollTop = chatHistory.scrollHeight;
+            history.scrollTop = history.scrollHeight;
         }
 
-        // Attach to window for Enter key support
-        window.sendMessage = sendMessage;
+        window.sendMessage = sendMessage; // Enter key එකට සහාය දීමට
     </script>
 </body>
 </html>
