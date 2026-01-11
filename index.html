@@ -22,48 +22,65 @@
         .btn-neon { background: linear-gradient(90deg, var(--blue), var(--cyan)); transition: 0.3s; color: black; font-weight: 800; }
         .btn-neon:hover { box-shadow: 0 0 25px var(--cyan); transform: translateY(-2px); }
         .hidden { display: none !important; }
+        .input-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; width: 100%; outline: none; transition: 0.3s; }
+        .input-box:focus { border-color: var(--cyan); background: rgba(255,255,255,0.08); }
+        
+        /* Chat UI */
+        .msg-ai { background: rgba(255, 255, 255, 0.03); align-self: flex-start; border-radius: 0 24px 24px 24px; border: 1px solid rgba(0, 242, 255, 0.1); width: 100%; max-width: 95%; margin-bottom: 20px; }
+        .msg-user { background: var(--blue); align-self: flex-end; border-radius: 24px 24px 0 24px; width: fit-content; max-width: 85%; margin-bottom: 20px; padding: 15px 20px; box-shadow: 0 5px 15px rgba(0, 98, 255, 0.3); }
+        
+        pre { background: #080a0f !important; padding: 20px; border-radius: 15px; overflow-x: auto; margin: 15px 0; border: 1px solid #1a1e26; font-family: monospace; color: #00f2ff; font-size: 13px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        .msg-ai { background: rgba(255, 255, 255, 0.03); align-self: flex-start; border-radius: 0 24px 24px 24px; border: 1px solid rgba(0, 242, 255, 0.1); width: 100%; max-width: 95%; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .msg-user { background: var(--blue); align-self: flex-end; border-radius: 24px 24px 0 24px; width: fit-content; max-width: 85%; margin-bottom: 20px; color: white; padding: 15px 20px; }
-        
-        pre { background: #080a0f !important; padding: 20px; border-radius: 15px; overflow-x: auto; margin: 15px 0; border: 1px solid #1a1e26; font-family: monospace; color: #00f2ff; }
-        .logo-glow { filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.4)); }
     </style>
 </head>
 <body onload="initApp()">
 
-    <!-- AUTH SECTION (මුලින්ම පෙන්වන කොටස) -->
-    <section id="page-auth" class="min-h-screen flex items-center justify-center p-6 bg-[radial-gradient(circle_at_top_right,_#112244_0%,_transparent_50%)]">
-        <div class="glass w-full max-w-sm p-12 rounded-[3.5rem] text-center border-cyan-500/20 shadow-2xl">
-            <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" 
-                 class="w-32 h-32 rounded-2xl logo-glow mx-auto mb-10">
-            <h1 class="font-tech text-4xl font-black mb-2 uppercase italic tracking-tighter">WONEX <span class="text-neon">DIGITAL</span></h1>
-            <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.4em] mb-12">The AI Code Architect</p>
+    <!-- AUTH SECTION -->
+    <section id="page-auth" class="min-h-screen flex items-center justify-center p-6 bg-[radial-gradient(circle_at_center,_#112244_0%,_transparent_100%)]">
+        <div class="glass w-full max-w-md p-8 md:p-12 rounded-[3rem] text-center border-cyan-500/20 shadow-2xl">
+            <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" class="w-24 h-24 rounded-2xl mx-auto mb-6 shadow-lg shadow-cyan-500/20">
+            <h1 class="font-tech text-3xl font-black mb-2 uppercase italic tracking-tighter">WONEX <span class="text-neon">DIGITAL</span></h1>
+            <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.4em] mb-10">AI Coding Ecosystem</p>
+
+            <div class="flex mb-8 bg-white/5 rounded-2xl p-1">
+                <button id="signupTab" onclick="toggleTab('signup')" class="flex-1 py-3 text-xs font-bold rounded-xl btn-neon transition">SIGN UP</button>
+                <button id="loginTab" onclick="toggleTab('login')" class="flex-1 py-3 text-xs font-bold rounded-xl transition">LOGIN</button>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" class="space-y-4 text-left">
+                <input type="text" id="sName" placeholder="Full Name" class="input-box">
+                <input type="email" id="sEmail" placeholder="Email Address" class="input-box">
+                <input type="text" id="sPhone" placeholder="Phone Number (e.g. 0771234567)" class="input-box">
+                <input type="password" id="sPass" placeholder="Create Password" class="input-box">
+                <button onclick="handleAuth('signup')" class="w-full btn-neon py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl active:scale-95 transition">Register Now</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="space-y-4 text-left hidden">
+                <input type="email" id="lEmail" placeholder="Email Address" class="input-box">
+                <input type="password" id="lPass" placeholder="Password" class="input-box">
+                <button onclick="handleAuth('login')" class="w-full btn-neon py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl active:scale-95 transition">Sign In</button>
+            </div>
             
-            <button id="googleLoginBtn" class="w-full flex items-center justify-center gap-4 bg-white text-black py-5 rounded-2xl font-black hover:bg-gray-100 transition shadow-xl active:scale-95">
-                <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" class="w-6 h-6"> 
-                <span class="tracking-tight uppercase">Login with Google</span>
-            </button>
-            
-            <div id="loader" class="hidden mt-6 text-cyan-400 font-bold uppercase text-xs animate-pulse">Authenticating...</div>
+            <p id="authMsg" class="text-red-400 text-[10px] mt-4 font-bold uppercase hidden"></p>
         </div>
     </section>
 
-    <!-- MAIN APP STRUCTURE (Login වූ පසු පෙන්වන කොටස) -->
+    <!-- MAIN APP STRUCTURE -->
     <div id="main-app" class="hidden min-h-screen flex flex-col">
         <!-- Navigation -->
-        <nav class="p-4 glass sticky top-0 z-50 flex justify-between items-center px-6 md:px-12 border-b border-white/5">
-            <div class="flex items-center gap-4 cursor-pointer" onclick="navigateTo('chat')">
-                <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" class="w-12 h-12 rounded-lg">
-                <h1 class="font-tech text-xl font-bold tracking-tighter hidden sm:block uppercase">WONEX <span class="text-neon">DIGITAL</span></h1>
+        <nav class="p-4 glass sticky top-0 z-50 flex justify-between items-center px-4 md:px-12 border-b border-white/5">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('chat')">
+                <img src="https://res.cloudinary.com/deljgkppf/image/upload/v1768149492/White_Black_Illustrative_Esport_Logo_20251230_112717_0000_zgm2cl.png" class="w-10 h-10 rounded-lg">
+                <h1 class="font-tech text-lg font-bold tracking-tighter uppercase italic">WONEX <span class="text-neon">DIGITAL</span></h1>
             </div>
             
             <div class="flex items-center gap-4">
-                <div class="bg-cyan-500/10 text-cyan-400 px-4 py-1.5 rounded-full text-[10px] font-black border border-cyan-500/20">
+                <div class="bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-full text-[9px] font-black border border-cyan-500/20">
                     LIVE: <span id="liveCounter">1</span>
                 </div>
-                <div onclick="navigateTo('profile')" class="w-10 h-10 rounded-full border-2 border-cyan-500 overflow-hidden cursor-pointer">
+                <div onclick="navigateTo('profile')" class="w-10 h-10 rounded-full border-2 border-cyan-500 overflow-hidden cursor-pointer shadow-lg">
                     <img id="userAvatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-full h-full object-cover">
                 </div>
             </div>
@@ -71,41 +88,53 @@
 
         <!-- CHAT INTERFACE -->
         <main id="view-chat" class="flex-grow flex flex-col p-4 md:p-8 max-w-5xl mx-auto w-full">
-            <div id="chatHistory" class="flex-grow overflow-y-auto space-y-4 pr-2 no-scrollbar mb-6 flex flex-col pt-4">
-                <div class="msg-ai p-8 shadow-xl">
-                    <p class="text-sm leading-relaxed text-gray-300">සාදරයෙන් පිළිගන්නවා! මම Wonex AI. ඔබට අවශ්‍ය ඕනෑම වෙබ් අඩවියක Code එක ලබාදෙන්න මම සූදානම්.</p>
+            <div id="chatHistory" class="flex-grow overflow-y-auto space-y-2 pr-2 no-scrollbar mb-6 flex flex-col pt-4">
+                <div class="msg-ai p-6 shadow-xl animate-fade-in">
+                    <p class="text-sm leading-relaxed text-gray-300">සාදරයෙන් පිළිගන්නවා! මම Wonex AI. ඔබට අවශ්‍ය ඕනෑම Coding උදව්වක් මගෙන් ලබාගන්න.</p>
                 </div>
             </div>
 
-            <div class="glass p-3 rounded-[2rem] flex items-center gap-3 border-white/10 shadow-2xl sticky bottom-4">
-                <input type="text" id="aiInput" placeholder="Describe your web idea..." class="flex-grow bg-transparent p-4 outline-none text-sm font-medium">
-                <button onclick="sendMessage()" class="w-14 h-14 btn-neon rounded-[1.2rem] flex items-center justify-center text-xl active:scale-90 transition">
+            <div class="glass p-2 rounded-[2rem] flex items-center gap-2 border-white/10 shadow-2xl sticky bottom-4">
+                <input type="text" id="aiInput" placeholder="Write a prompt..." class="flex-grow bg-transparent p-4 outline-none text-sm font-medium">
+                <button onclick="sendMessage()" class="w-12 h-12 btn-neon rounded-2xl flex items-center justify-center text-xl active:scale-90 transition">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
         </main>
 
         <!-- PROFILE VIEW -->
-        <main id="view-profile" class="hidden flex-grow p-8 flex items-center justify-center">
-            <div class="glass w-full max-w-md p-12 rounded-[3rem] text-center border-white/10 shadow-2xl relative">
-                <img id="profImg" src="" class="w-24 h-24 mx-auto mb-6 rounded-full border-2 border-cyan-500">
-                <h2 class="font-tech text-2xl font-bold mb-10 text-neon uppercase">Developer Profile</h2>
-                <div class="space-y-4 text-left mb-10">
-                    <div class="bg-white/5 p-5 rounded-2xl">
-                        <p class="text-[10px] text-cyan-500 uppercase font-black mb-1">Name</p>
-                        <p id="profName" class="font-bold text-lg">---</p>
+        <main id="view-profile" class="hidden flex-grow p-4 md:p-8 flex items-center justify-center">
+            <div class="glass w-full max-w-md p-10 rounded-[3rem] text-center border-white/10 shadow-2xl relative">
+                <div class="w-24 h-24 bg-blue-600/20 rounded-full mx-auto mb-6 flex items-center justify-center border-2 border-cyan-500">
+                    <i class="fas fa-user text-4xl text-cyan-400"></i>
+                </div>
+                <h2 class="font-tech text-2xl font-bold mb-8 text-neon uppercase tracking-widest">My Account</h2>
+                <div id="profDetails" class="space-y-4 text-left mb-10">
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5">
+                        <p class="text-[9px] text-cyan-500 uppercase font-black mb-1">Full Name</p>
+                        <p id="profName" class="font-bold">---</p>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5">
+                        <p class="text-[9px] text-cyan-500 uppercase font-black mb-1">Email</p>
+                        <p id="profEmail" class="text-sm opacity-60">---</p>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5">
+                        <p class="text-[9px] text-cyan-500 uppercase font-black mb-1">Phone</p>
+                        <p id="profPhone" class="text-sm opacity-60">---</p>
                     </div>
                 </div>
-                <button onclick="signOut()" class="w-full py-4 bg-red-600/10 text-red-500 font-bold rounded-2xl border border-red-500/20">Log Out</button>
+                <button onclick="signOut()" class="w-full py-4 bg-red-600/10 text-red-500 font-bold rounded-2xl border border-red-500/20 uppercase text-[10px] tracking-widest">Logout</button>
             </div>
         </main>
     </div>
 
-    <!-- Scripting -->
+    <!-- Markdown & Scripting -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
     <script>
-        // --- FIREBASE CONFIG ---
+        // --- CONFIG ---
+        const GEMINI_API_KEY = "AIzaSyCuKt-1ptyt8x2keYS7Q8VSivipToSLaEI"; 
+        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
         const firebaseConfig = {
             apiKey: "AIzaSyAHP6jCiOZ3yBTMogJ-8lGWb26U_SfeXts",
             authDomain: "lochi-creation-bc929.firebaseapp.com",
@@ -119,87 +148,92 @@
         const auth = firebase.auth();
         const database = firebase.database();
 
-        // --- GEMINI CONFIG ---
-        const GEMINI_API_KEY = "AIzaSyCuKt-1ptyt8x2keYS7Q8VSivipToSLaEI"; 
-        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        let currentData = null;
 
-        // --- AUTH LOGIC (FIXED FOR MOBILE) ---
         function initApp() {
-            // 1. Redirect Login එකක ප්‍රතිඵලය පරීක්ෂා කිරීම (Mobile සඳහා මෙය අත්‍යවශ්‍යයි)
-            auth.getRedirectResult().then(result => {
-                if (result.user) {
-                    toggleUI(true);
-                }
-            }).catch(error => {
-                console.error("Login Error: ", error.message);
-                document.getElementById('authError').innerText = error.message;
-                document.getElementById('authError').classList.remove('hidden');
-            });
-
-            // 2. Auth State වෙනස් වන විට (Login/Logout)
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    toggleUI(true);
-                    updateProfile(user);
-                    trackPresence();
+                    database.ref('users/' + user.uid).on('value', snap => {
+                        currentData = snap.val();
+                        if(currentData) {
+                            document.getElementById('profName').innerText = currentData.name;
+                            document.getElementById('profEmail').innerText = currentData.email;
+                            document.getElementById('profPhone').innerText = currentData.phone;
+                            showMain();
+                            trackPresence();
+                        }
+                    });
                 } else {
-                    toggleUI(false);
+                    document.getElementById('page-auth').classList.remove('hidden');
+                    document.getElementById('main-app').classList.add('hidden');
                 }
             });
-
-            // 3. Login Button Click
-            document.getElementById('googleLoginBtn').addEventListener('click', () => {
-                document.getElementById('loader').classList.remove('hidden');
-                const provider = new firebase.auth.GoogleAuthProvider();
-                // Mobile වලදීsignInWithRedirect ඉතා හොඳින් ක්‍රියා කරයි
-                auth.signInWithRedirect(provider);
-            });
         }
 
-        function toggleUI(isLoggedIn) {
-            if (isLoggedIn) {
-                document.getElementById('page-auth').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-            } else {
-                document.getElementById('page-auth').classList.remove('hidden');
-                document.getElementById('main-app').classList.add('hidden');
+        // --- AUTH LOGIC ---
+        function toggleTab(mode) {
+            document.getElementById('signupForm').classList.toggle('hidden', mode === 'login');
+            document.getElementById('loginForm').classList.toggle('hidden', mode === 'signup');
+            document.getElementById('signupTab').className = mode === 'signup' ? "flex-1 py-3 text-xs font-bold rounded-xl btn-neon transition" : "flex-1 py-3 text-xs font-bold rounded-xl transition";
+            document.getElementById('loginTab').className = mode === 'login' ? "flex-1 py-3 text-xs font-bold rounded-xl btn-neon transition" : "flex-1 py-3 text-xs font-bold rounded-xl transition";
+        }
+
+        async function handleAuth(mode) {
+            const email = document.getElementById(mode === 'signup' ? 'sEmail' : 'lEmail').value;
+            const pass = document.getElementById(mode === 'signup' ? 'sPass' : 'lPass').value;
+            const msg = document.getElementById('authMsg');
+
+            if(!email || !pass) return alert("Fill all fields!");
+
+            try {
+                if(mode === 'signup') {
+                    const name = document.getElementById('sName').value;
+                    const phone = document.getElementById('sPhone').value;
+                    if(!name || !phone) return alert("Fill all details!");
+
+                    const res = await auth.createUserWithEmailAndPassword(email, pass);
+                    await database.ref('users/' + res.user.uid).set({
+                        name: name, email: email, phone: phone, uid: res.user.uid
+                    });
+                    alert("Registration Successful!");
+                } else {
+                    await auth.signInWithEmailAndPassword(email, pass);
+                }
+            } catch (err) {
+                msg.innerText = err.message;
+                msg.classList.remove('hidden');
             }
         }
 
-        function updateProfile(user) {
-            document.getElementById('profName').innerText = user.displayName;
-            if(user.photoURL) {
-                document.getElementById('userAvatar').src = user.photoURL;
-                document.getElementById('profImg').src = user.photoURL;
-            }
+        function showMain() {
+            document.getElementById('page-auth').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
         }
 
-        function signOut() {
-            auth.signOut().then(() => location.reload());
-        }
+        function signOut() { auth.signOut().then(() => location.reload()); }
 
         function navigateTo(v) {
             ['chat', 'profile'].forEach(id => document.getElementById('view-'+id).classList.add('hidden'));
             document.getElementById('view-'+v).classList.remove('hidden');
         }
 
-        // --- LIVE COUNTER ---
+        // --- LIVE USERS ---
         function trackPresence() {
-            const userRef = database.ref('presence').push(true);
-            userRef.onDisconnect().remove();
+            const onlineRef = database.ref('presence').push(true);
+            onlineRef.onDisconnect().remove();
             database.ref('presence').on('value', s => document.getElementById('liveCounter').innerText = s.numChildren());
         }
 
-        // --- AI CHAT LOGIC ---
+        // --- AI CHAT ---
         async function sendMessage() {
             const input = document.getElementById('aiInput');
             const text = input.value.trim();
             if(!text) return;
 
-            const history = document.getElementById('chatHistory');
-            history.innerHTML += `<div class="msg-user shadow-xl animate-fade-in">${text}</div>`;
+            const chatHistory = document.getElementById('chatHistory');
+            chatHistory.innerHTML += `<div class="msg-user shadow-xl animate-fade-in text-sm">${text}</div>`;
             input.value = "";
-            history.scrollTop = history.scrollHeight;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
 
             try {
                 const response = await fetch(GEMINI_URL, {
@@ -211,14 +245,12 @@
                 });
                 const data = await response.json();
                 const aiText = data.candidates[0].content.parts[0].text;
-                history.innerHTML += `<div class="msg-ai p-8 shadow-2xl animate-fade-in"><div class="text-sm leading-relaxed text-gray-200">${marked.parse(aiText)}</div></div>`;
+                chatHistory.innerHTML += `<div class="msg-ai p-6 shadow-2xl animate-fade-in"><div class="text-sm leading-relaxed text-gray-200">${marked.parse(aiText)}</div></div>`;
             } catch (err) {
-                history.innerHTML += `<p class="text-red-500 text-xs uppercase font-bold">API Error</p>`;
+                chatHistory.innerHTML += `<p class='text-red-400 text-xs uppercase font-bold p-4'>API Error or Limit Reached</p>`;
             }
-            history.scrollTop = history.scrollHeight;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
         }
-
-        window.sendMessage = sendMessage; // Enter key එකට සහාය දීමට
     </script>
 </body>
 </html>
